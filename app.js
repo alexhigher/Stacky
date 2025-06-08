@@ -123,9 +123,12 @@ class StackyApp {
       // Focus management
       this.manageFocus(screenName);
       
-      // Load screen-specific content
+      // Screen-specific actions
       if (screenName === 'suggestions') {
         this.generateSuggestions();
+      } else if (screenName === 'config') {
+        // Update data type field visibility based on selected services
+        this.updateDataTypeVisibility();
       }
     }, 300);
   }
@@ -169,6 +172,28 @@ class StackyApp {
     if (navigator.vibrate) {
       navigator.vibrate(50);
     }
+    
+    // Update data type field visibility if we're on the config screen
+    if (this.currentScreen === 'config') {
+      this.updateDataTypeVisibility();
+    }
+  }
+  
+  updateDataTypeVisibility() {
+    // This will be called when services are toggled or when entering the config screen
+    const needsDataType = this.selectedServices.has('cloud-storage') || 
+                          this.selectedServices.has('media-streaming');
+    
+    const dataTypeGroup = document.getElementById('data-type-group');
+    if (dataTypeGroup) {
+      dataTypeGroup.style.display = needsDataType ? 'block' : 'none';
+      
+      // Update required attribute
+      const dataTypeSelect = document.getElementById('data-type');
+      if (dataTypeSelect) {
+        dataTypeSelect.required = needsDataType;
+      }
+    }
   }
 
   handleKeyDown(event, element) {
@@ -183,10 +208,19 @@ class StackyApp {
     
     const config = {
       userCount: parseInt(document.getElementById('user-count').value),
-      dataType: document.getElementById('data-type').value,
       accessType: document.getElementById('access-type').value,
       securityLevel: document.getElementById('security-level').value
     };
+    
+    // Only include dataType if relevant services are selected
+    const needsDataType = this.selectedServices.has('cloud-storage') || 
+                          this.selectedServices.has('media-streaming');
+    
+    if (needsDataType) {
+      config.dataType = document.getElementById('data-type').value;
+    } else {
+      config.dataType = 'mixed'; // Default value if not applicable
+    }
 
     if (this.validateConfig(config)) {
       this.config = config;
@@ -201,7 +235,11 @@ class StackyApp {
       errors.push('Nutzeranzahl muss zwischen 5 und 1000 liegen');
     }
 
-    if (!config.dataType) {
+    // Only validate dataType if relevant services are selected
+    const needsDataType = this.selectedServices.has('cloud-storage') || 
+                          this.selectedServices.has('media-streaming');
+    
+    if (needsDataType && !config.dataType) {
       errors.push('Bitte wählen Sie einen Datentyp aus');
     }
 
@@ -378,7 +416,7 @@ class StackyApp {
     const div = document.createElement('div');
     div.innerHTML = `
       <div style="text-align: center; margin-top: 40px; padding: 32px; background: rgba(255, 255, 255, 0.05); border-radius: var(--radius);">
-        <h3>Bereit für den nächsten Schritt?</h3>
+        <h3 style="font-size: 1.2rem;">Bereit für den nächsten Schritt?</h3>
         <p>Unsere Experten helfen Ihnen bei der Umsetzung Ihrer Self-Hosting-Lösung.</p>
         <div class="cta-buttons">
           <button class="button" onclick="app.requestQuote()">
