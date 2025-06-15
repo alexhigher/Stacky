@@ -148,7 +148,7 @@ body {
 }
 
 .service-category {
-  background: white;
+  background: var(--card-bg);
   padding: 24px 20px;
   border-radius: var(--radius);
   box-shadow: var(--shadow);
@@ -200,7 +200,7 @@ body {
   padding: 12px 16px;
   border: 1px solid #ced4da;
   border-radius: var(--radius);
-  background: white;
+  background: var(--card-bg);
   color: var(--text-dark);
   font-size: 1rem;
   transition: var(--transition);
@@ -219,7 +219,7 @@ body {
 .suggestion,
 .hardware-recommendation,
 .amortization-calculator {
-  background: white;
+  background: var(--card-bg);
   padding: 24px;
   border-radius: var(--radius);
   box-shadow: var(--shadow);
