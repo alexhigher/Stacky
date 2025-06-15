@@ -1,5 +1,5 @@
 // Service Worker for offline functionality
-const CACHE_NAME = 'eurostack-cache-v1';
+const CACHE_NAME = 'stacky-cache-v1';
 const urlsToCache = [
   '/',
   '/index.html',
