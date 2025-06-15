@@ -618,16 +618,30 @@ const app = new StackyApp();
 
 // Konami Code Easter Egg
 let konamiCode = [];
-const konamiSequence = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65]; // Up Up Down Down Left Right Left Right B A
+const konamiSequence = [
+  'ArrowUp',
+  'ArrowUp',
+  'ArrowDown',
+  'ArrowDown',
+  'ArrowLeft',
+  'ArrowRight',
+  'ArrowLeft',
+  'ArrowRight',
+  'b',
+  'a'
+]; // Up Up Down Down Left Right Left Right B A
 
 document.addEventListener('keydown', (e) => {
-  konamiCode.push(e.keyCode);
+  const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+  konamiCode.push(key);
   if (konamiCode.length > konamiSequence.length) {
     konamiCode.shift();
   }
-  
-  if (konamiCode.length === konamiSequence.length && 
-      konamiCode.every((code, index) => code === konamiSequence[index])) {
+
+  if (
+    konamiCode.length === konamiSequence.length &&
+    konamiCode.every((code, index) => code === konamiSequence[index])
+  ) {
     // Easter egg activated!
     document.body.style.filter = 'hue-rotate(180deg)';
     setTimeout(() => {
