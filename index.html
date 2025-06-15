@@ -6,11 +6,16 @@
   <title>Stacky - B2B Self-Hosting Platform</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
   <div class="progress-bar">
     <div class="progress-fill" id="progress-fill"></div>
   </div>
+  <button id="theme-toggle" class="theme-toggle" aria-label="Dark Mode umschalten">
+    <i class="fas fa-moon" aria-hidden="true"></i>
+  </button>
 
   <div class="container">
     <!-- Welcome Screen -->
@@ -67,8 +72,8 @@
           <h3>Dokumenten-Management</h3>
           <p>Versionierung & Workflow-Automatisierung</p>
         </div>
-        <div class="service-category" 
-             tabindex="0" 
+        <div class="service-category"
+             tabindex="0"
              role="button"
              aria-pressed="false"
              data-service="vpn-services"
@@ -77,6 +82,28 @@
           <i class="fas fa-globe" aria-hidden="true"></i>
           <h3>Sichere Kommunikation</h3>
           <p>VPN, Chat & Videokonferenzen</p>
+        </div>
+        <div class="service-category"
+             tabindex="0"
+             role="button"
+             aria-pressed="false"
+             data-service="backup-solution"
+             onclick="app.toggleService(this)"
+             onkeydown="app.handleKeyDown(event, this)">
+          <i class="fas fa-database" aria-hidden="true"></i>
+          <h3>Backup-Lösung</h3>
+          <p>Automatisierte Backups & Recovery</p>
+        </div>
+        <div class="service-category"
+             tabindex="0"
+             role="button"
+             aria-pressed="false"
+             data-service="monitoring-tools"
+             onclick="app.toggleService(this)"
+             onkeydown="app.handleKeyDown(event, this)">
+          <i class="fas fa-chart-area" aria-hidden="true"></i>
+          <h3>Monitoring & Analyse</h3>
+          <p>Systemüberwachung & Dashboards</p>
         </div>
       </div>
       <button class="button" onclick="app.showScreen('config')" id="selection-continue">
