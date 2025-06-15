@@ -32,6 +32,22 @@ const CONFIG = {
       description: 'Matrix bietet eine sichere, dezentrale Kommunikationsplattform für Unternehmen mit Ende-zu-Ende-Verschlüsselung, Videokonferenzen und nahtloser Integration in bestehende Systeme.',
       repo: 'https://github.com/matrix-org',
       features: ['Verschlüsselte Chats', 'Videokonferenzen', 'Datei-Sharing', 'API-Integration']
+    },
+    'backup-solution': {
+      name: 'Backup-Lösung',
+      software: 'Restic',
+      icon: 'fas fa-database',
+      description: 'Restic ermöglicht inkrementelle, verschlüsselte Backups mit einfacher Wiederherstellung und Cloud- sowie Offsite-Zielen.',
+      repo: 'https://github.com/restic/restic',
+      features: ['Deduplizierung', 'Verschlüsselung', 'Zeitpläne', 'Unterstützung für viele Speicherziele']
+    },
+    'monitoring-tools': {
+      name: 'Monitoring & Analyse',
+      software: 'Prometheus + Grafana',
+      icon: 'fas fa-chart-area',
+      description: 'Umfassendes Monitoring mit Metriken, Alarmierung und anpassbaren Dashboards zur Visualisierung der Infrastruktur.',
+      repo: 'https://github.com/prometheus/prometheus',
+      features: ['Metriken sammeln', 'Alertmanager', 'Grafische Dashboards', 'Exporters für viele Dienste']
     }
   },
   hardware: {
@@ -64,6 +80,16 @@ const CONFIG = {
       maxUsers: 500,
       maxStorage: 8000,
       features: ['Hochverfügbarkeit', 'Load-Balancing', 'Disaster Recovery', 'SLA mit 99,9% Uptime']
+    },
+    ultimate: {
+      name: "Ultimate",
+      target: "500+ Nutzer",
+      price: 6999,
+      description: "Clusterfähiger Rack-Server mit 16TB NVMe, 128GB RAM und redundantem Netzwerk",
+      maintenance: 199,
+      maxUsers: 2000,
+      maxStorage: 16000,
+      features: ['Cluster-Unterstützung', 'Hochverfügbare Storage-Pools', 'Erweiterte Service-SLAs']
     }
   },
   addOns: {
@@ -82,11 +108,29 @@ class StackyApp {
     this.selectedServices = new Set();
     this.currentScreen = 'welcome';
     this.config = {};
+    this.costChart = null;
     this.init();
   }
 
   init() {
     this.updateProgress();
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    const themeToggle = document.getElementById('theme-toggle');
+    if (themeToggle) {
+      themeToggle.addEventListener('click', () => {
+        const current = document.documentElement.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        themeToggle.innerHTML = next === 'dark'
+          ? '<i class="fas fa-sun" aria-hidden="true"></i>'
+          : '<i class="fas fa-moon" aria-hidden="true"></i>';
+      });
+      themeToggle.innerHTML = savedTheme === 'dark'
+        ? '<i class="fas fa-sun" aria-hidden="true"></i>'
+        : '<i class="fas fa-moon" aria-hidden="true"></i>';
+    }
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && this.currentScreen !== 'welcome') {
         this.goBack();
@@ -327,6 +371,9 @@ class StackyApp {
     if (userCount > 75 || requiredStorage > 4000) {
       selectedPackage = CONFIG.hardware.enterprise;
     }
+    if (userCount > 500 || requiredStorage > 8000) {
+      selectedPackage = CONFIG.hardware.ultimate;
+    }
 
     const div = document.createElement('div');
     div.className = 'hardware-recommendation';
@@ -407,6 +454,7 @@ class StackyApp {
       <button type="button" class="button" onclick="app.calculateAmortization()">
         <i class="fas fa-chart-line" aria-hidden="true"></i> Berechnen
       </button>
+      <canvas id="cost-chart" style="max-width:400px;margin:20px auto;display:block;"></canvas>
       <div id="amortization-result"></div>
     `;
     return div;
@@ -427,6 +475,9 @@ class StackyApp {
           </button>
           <button class="button" onclick="app.downloadConfig()">
             <i class="fas fa-download" aria-hidden="true"></i> Konfiguration herunterladen
+          </button>
+          <button class="button" onclick="app.downloadPDF()">
+            <i class="fas fa-file-pdf" aria-hidden="true"></i> PDF speichern
           </button>
         </div>
       </div>
@@ -528,6 +579,24 @@ class StackyApp {
         `}
       </div>
     `;
+
+    const ctx = document.getElementById('cost-chart');
+    if (ctx) {
+      const data = {
+        labels: ['Self-Hosting', 'Cloud'],
+        datasets: [{
+          label: 'Kosten €',
+          data: [selfHostingCost, cloudCostTotal],
+          backgroundColor: ['var(--accent)', 'var(--secondary)']
+        }]
+      };
+      if (this.costChart) {
+        this.costChart.data = data;
+        this.costChart.update();
+      } else {
+        this.costChart = new Chart(ctx, { type: 'bar', data });
+      }
+    }
   }
 
   updateProgress() {
@@ -610,6 +679,29 @@ class StackyApp {
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
+  }
+
+  downloadPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    let y = 10;
+    doc.setFontSize(16);
+    doc.text('Stacky Konfiguration', 10, y);
+    y += 10;
+    doc.setFontSize(12);
+    const lines = [
+      `Dienste: ${Array.from(this.selectedServices).join(', ')}`,
+      `Nutzer: ${this.config.userCount}`,
+      `Datenart: ${this.config.dataType}`,
+      `Zugriff: ${this.config.accessType}`,
+      `Sicherheit: ${this.config.securityLevel}`,
+      `Hardware: ${this.selectedPackage.name}`
+    ];
+    lines.forEach(line => {
+      doc.text(line, 10, y);
+      y += 7;
+    });
+    doc.save(`stacky-config-${new Date().toISOString().split('T')[0]}.pdf`);
   }
 }
 
