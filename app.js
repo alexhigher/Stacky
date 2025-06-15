@@ -17,7 +17,7 @@ const CONFIG = {
       repo: 'https://github.com/bitwarden/server',
       features: ['Passwort-Sharing', 'Zwei-Faktor-Authentifizierung', 'Audit-Logs', 'API-Zugriff']
     },
-    'media-streaming': {
+    'document-management': {
       name: 'Dokumenten-Management',
       software: 'Paperless-ngx',
       icon: 'fas fa-file-alt',
@@ -181,8 +181,8 @@ class StackyApp {
   
   updateDataTypeVisibility() {
     // This will be called when services are toggled or when entering the config screen
-    const needsDataType = this.selectedServices.has('cloud-storage') || 
-                          this.selectedServices.has('media-streaming');
+    const needsDataType = this.selectedServices.has('cloud-storage') ||
+                          this.selectedServices.has('document-management');
     
     const dataTypeGroup = document.getElementById('data-type-group');
     if (dataTypeGroup) {
@@ -213,8 +213,8 @@ class StackyApp {
     };
     
     // Only include dataType if relevant services are selected
-    const needsDataType = this.selectedServices.has('cloud-storage') || 
-                          this.selectedServices.has('media-streaming');
+    const needsDataType = this.selectedServices.has('cloud-storage') ||
+                          this.selectedServices.has('document-management');
     
     if (needsDataType) {
       config.dataType = document.getElementById('data-type').value;
@@ -236,8 +236,8 @@ class StackyApp {
     }
 
     // Only validate dataType if relevant services are selected
-    const needsDataType = this.selectedServices.has('cloud-storage') || 
-                          this.selectedServices.has('media-streaming');
+    const needsDataType = this.selectedServices.has('cloud-storage') ||
+                          this.selectedServices.has('document-management');
     
     if (needsDataType && !config.dataType) {
       errors.push('Bitte wählen Sie einen Datentyp aus');
