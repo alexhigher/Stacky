@@ -47,14 +47,3 @@ Stacky helps businesses transition from cloud-based services to self-hosted alte
 4. Review personalized hardware and software recommendations.
 5. Use the amortization calculator to see cost savings over time.
 6. Download your configuration or request a quote for professional setup.
-
-## Contributing
-
-We welcome contributions to improve Stacky! To contribute:
-
-1. **Fork the Repository**: Create your own fork of the codebase.
-2. **Make Changes**: Implement your features or bug fixes.
-3. **Test Locally**: Ensure your changes work by testing in your browser.
-4. **Submit a Pull Request**: Describe your changes in detail for review.
-
-Please follow our [Code of Conduct](link-to-conduct) and ensure your contributions align with the project's goals.
