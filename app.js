@@ -550,8 +550,8 @@ class StackyApp {
         <p>Monatlich: €${totalMonthly}</p>
       `;
     }
-    // Update the amortization calculation to reflect the new costs
-    this.calculateAmortization();
+    // Update the amortization calculation to reflect the new costs, pass true to indicate it's from updateCosts
+    this.calculateAmortization(true);
   }
 
   /**
@@ -559,11 +559,11 @@ class StackyApp {
    * Updates the UI with cost comparisons, savings, and break-even points.
    * Also generates a line chart to visualize cost trends over time.
    */
-  calculateAmortization() {
+  calculateAmortization(fromUpdateCosts = false) {
     const cloudCost = parseFloat(document.getElementById('current-cloud-cost').value) || 0;
     const periodYears = parseInt(document.getElementById('calculation-period').value);
     
-    if (cloudCost <= 0) {
+    if (cloudCost <= 0 && !fromUpdateCosts) {
       alert('Bitte geben Sie Ihre aktuellen Cloud-Kosten ein.');
       return;
     }
