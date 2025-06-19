@@ -39,19 +39,6 @@ Stacky helps businesses transition from cloud-based services to self-hosted alte
 - A modern web browser (Chrome, Firefox, Edge, or Safari) with JavaScript enabled.
 - No additional software or setup is required as Stacky runs directly in the browser.
 
-### Installation
-
-1. **Clone the Repository**:
-   ```bash
-   git clone https://github.com/yourusername/stacky.git
-   ```
-2. **Navigate to the Project Directory**:
-   ```bash
-   cd stacky
-   ```
-3. **Open the Application**:
-   Simply open `index.html` in your web browser to start using Stacky.
-
 ### Usage
 
 1. Launch the application by opening `index.html`.
@@ -71,15 +58,3 @@ We welcome contributions to improve Stacky! To contribute:
 4. **Submit a Pull Request**: Describe your changes in detail for review.
 
 Please follow our [Code of Conduct](link-to-conduct) and ensure your contributions align with the project's goals.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Contact
-
-For support or inquiries, please reach out to our team at [support@stacky.com](mailto:support@stacky.com) or visit our [website](https://stacky.example.com).
-
----
-
-*Empower your business with self-hosted solutions using Stacky!*
