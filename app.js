@@ -451,12 +451,18 @@ class StackyApp {
           </select>
         </div>
       </div>
-      <button type="button" class="button" onclick="app.calculateAmortization()">
-        <i class="fas fa-chart-line" aria-hidden="true"></i> Berechnen
-      </button>
       <canvas id="cost-chart" style="max-width:400px;margin:20px auto;display:block;"></canvas>
       <div id="amortization-result"></div>
     `;
+    // Add event listeners for dynamic updates
+    setTimeout(() => {
+      const cloudCostInput = document.getElementById('current-cloud-cost');
+      const periodSelect = document.getElementById('calculation-period');
+      if (cloudCostInput && periodSelect) {
+        cloudCostInput.addEventListener('input', () => app.calculateAmortization());
+        periodSelect.addEventListener('change', () => app.calculateAmortization());
+      }
+    }, 0);
     return div;
   }
 
@@ -510,6 +516,8 @@ class StackyApp {
         <p>Monatlich: €${totalMonthly}</p>
       `;
     }
+    // Update the amortization calculation to reflect the new costs
+    this.calculateAmortization();
   }
 
   calculateAmortization() {
@@ -564,7 +572,7 @@ class StackyApp {
           </div>
           <div>
             <p><strong>Ersparnis:</strong></p>
-            <p style="font-size: 1.2em; color: var(--success);">€${savings.toLocaleString()} (${savingsPercentage}%)</p>
+            <p style="font-size: 1.2em; color: ${savings > 0 ? 'var(--success)' : 'var(--error)'};">€${savings.toLocaleString()} (${savingsPercentage}%)</p>
           </div>
         </div>
         <p><strong>Break-Even:</strong> ${breakEvenMonths === 'Nie' ? 'Nicht erreicht' : `${breakEvenMonths} Monate`}</p>
@@ -580,22 +588,68 @@ class StackyApp {
       </div>
     `;
 
+    // Create data for line chart showing cumulative costs over time
+    const months = Array.from({ length: periodMonths + 1 }, (_, i) => i);
+    const selfHostingCosts = months.map(m => totalOneTime + (totalMonthly * m));
+    const cloudCosts = months.map(m => cloudCost * m);
+
     const ctx = document.getElementById('cost-chart');
     if (ctx) {
       const data = {
-        labels: ['Self-Hosting', 'Cloud'],
+        labels: months.map(m => `Monat ${m}`),
         datasets: [{
-          label: 'Kosten €',
-          data: [selfHostingCost, cloudCostTotal],
-          backgroundColor: ['var(--accent)', 'var(--secondary)']
+          label: 'Self-Hosting Kosten',
+          data: selfHostingCosts,
+          borderColor: 'var(--accent)',
+          backgroundColor: 'rgba(0, 150, 136, 0.1)',
+          fill: true,
+          tension: 0.1
+        }, {
+          label: 'Cloud Kosten',
+          data: cloudCosts,
+          borderColor: 'var(--secondary)',
+          backgroundColor: 'rgba(108, 117, 125, 0.1)',
+          fill: true,
+          tension: 0.1
         }]
       };
       if (this.costChart) {
-        this.costChart.data = data;
-        this.costChart.update();
-      } else {
-        this.costChart = new Chart(ctx, { type: 'bar', data });
+        this.costChart.destroy(); // Destroy existing chart instance
       }
+      this.costChart = new Chart(ctx, {
+        type: 'line',
+        data: data,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: 'Kosten (€)'
+              },
+              ticks: {
+                callback: function(value) {
+                  return '€' + value.toLocaleString();
+                }
+              }
+            },
+            x: {
+              title: {
+                display: true,
+                text: 'Zeit (Monate)'
+              }
+            }
+          },
+          plugins: {
+            title: {
+              display: true,
+              text: 'Kostenentwicklung und Break-Even'
+            }
+          }
+        }
+      });
     }
   }
 
