@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profil - Beispiel Firma</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="progress-bar">
+    <div class="progress-fill" id="progress-fill" style="width: 100%;"></div>
+  </div>
+  <button id="theme-toggle" class="theme-toggle" aria-label="Dark Mode umschalten">
+    <i class="fas fa-moon" aria-hidden="true"></i>
+  </button>
+  <a href="index.html" class="profile-link" aria-label="Zurück zur Hauptseite">
+    <span>Zurück zu Stacky</span>
+  </a>
+
+  <div class="container">
+    <div class="screen active">
+      <div class="title">Profil von Stark Industries</div>
+      <div class="subtitle">Unternehmensdetails und Support</div>
+      
+      <div class="suggestion profile-box">
+        <h3><i class="fas fa-building" aria-hidden="true"></i> Unternehmensinformationen</h3>
+        <p><strong>Name:</strong> Stark Industries</p>
+        <p><strong>Adresse:</strong> 10880 Malibu Point, 90265 Malibu, CA, USA</p>
+        <p><strong>Telefon:</strong> +1 555-IRONMAN</p>
+        <p><strong>E-Mail:</strong> tony@starkindustries.com</p>
+        <p><strong>Website:</strong> <a href="https://www.starkindustries.com" target="_blank" rel="noopener noreferrer">www.starkindustries.com</a></p>
+        <p><strong>Branche:</strong> Advanced Technology & Defense</p>
+        <p><strong>Gründungsjahr:</strong> 1965</p>
+      </div>
+      
+      <div class="suggestion profile-box">
+        <h3><i class="fas fa-ticket-alt" aria-hidden="true"></i> Support-Ticket erstellen</h3>
+        <form class="config-form" id="ticket-form">
+          <div class="form-group">
+            <label for="ticket-title">Titel:</label>
+            <input type="text" id="ticket-title" placeholder="Betreff des Problems" required>
+          </div>
+          <div class="form-group">
+            <label for="ticket-content">Beschreibung:</label>
+            <textarea id="ticket-content" style="width: 100%; padding: 12px 16px; border: 1px solid #ced4da; border-radius: var(--radius); background: var(--card-bg); color: var(--text-dark); font-size: 1rem; min-height: 150px;" placeholder="Beschreiben Sie Ihr Anliegen..." required></textarea>
+          </div>
+          <div style="text-align: center; margin-top: 20px; display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
+            <button type="submit" class="button">
+              <i class="fas fa-paper-plane" aria-hidden="true"></i> Ticket senden
+            </button>
+            <button class="button" aria-label="Remote Support anfordern">
+              <i class="fas fa-headset" aria-hidden="true"></i> Remote Support
+            </button>
+          </div>
+        </form>
+      </div>
+      
+      <div class="suggestion profile-box">
+        <h3><i class="fas fa-file-code" aria-hidden="true"></i> Docker Compose File</h3>
+        <div class="form-group">
+          <label for="docker-compose-content">Beispiel Docker Compose Konfiguration:</label>
+          <textarea id="docker-compose-content" readonly style="width: 100%; padding: 12px 16px; border: 1px solid #ced4da; border-radius: var(--radius); background: var(--card-bg); color: var(--text-dark); font-size: 0.9rem; min-height: 200px; font-family: monospace; resize: none; pointer-events: none;">version: '3.8'
+services:
+  app:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./html:/usr/share/nginx/html
+    networks:
+      - app-network
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: myapp
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - app-network
+
+volumes:
+  db-data:
+
+networks:
+  app-network:
+    driver: bridge</textarea>
+        </div>
+        <div style="text-align: center; margin-top: 20px; display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
+          <button class="button" aria-label="Deploy starten">
+            <i class="fas fa-rocket" aria-hidden="true"></i> Deploy
+          </button>
+          <button class="button" aria-label="Text kopieren" onclick="copyToClipboard('docker-compose-content')">
+            <i class="fas fa-copy" aria-hidden="true"></i> Kopieren
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <nav class="footer-nav">
+        <a href="#" aria-label="Impressum">Impressum</a>
+        <a href="#" aria-label="AGB">AGB</a>
+        <a href="#" aria-label="Datenschutz">Datenschutz</a>
+      </nav>
+      <div class="copyright">
+        &copy; 2025 Stacky. Alle Rechte vorbehalten.
+      </div>
+    </div>
+  </footer>
+  
+  <script>
+    // Theme toggle functionality (copied from main app for consistency)
+    document.getElementById('theme-toggle').addEventListener('click', function() {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+    });
+    
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    
+    // Function to copy text to clipboard
+    function copyToClipboard(elementId) {
+      const textarea = document.getElementById(elementId);
+      textarea.select();
+      document.execCommand('copy');
+      alert('Text wurde in die Zwischenablage kopiert!');
+    }
+    
+    // Easter Egg: Hidden message on triple click of the title
+    document.querySelector('.title').addEventListener('click', function(e) {
+      if (e.detail === 3) {
+        alert("Easter Egg gefunden! 'I am Iron Man!' - Tony Stark");
+      }
+    });
+  </script>
+</body>
+</html>

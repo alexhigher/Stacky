@@ -468,16 +468,16 @@ class StackyApp {
         <p>Unsere Experten helfen Ihnen bei der Umsetzung Ihrer Self-Hosting-Lösung.</p>
         <div class="cta-buttons">
           <button class="button" onclick="app.requestQuote()">
-            <i class="fas fa-file-alt" aria-hidden="true"></i> Angebot anfordern
+            <i class="fas fa-file-alt" aria-hidden="true"></i><span>Angebot anfordern</span>
           </button>
           <button class="button" onclick="app.bookConsultation()">
-            <i class="fas fa-calendar" aria-hidden="true"></i> Beratung buchen
+            <i class="fas fa-calendar" aria-hidden="true"></i><span>Beratung buchen</span>
           </button>
           <button class="button" onclick="app.downloadConfig()">
-            <i class="fas fa-download" aria-hidden="true"></i> Konfiguration herunterladen
+            <i class="fas fa-download" aria-hidden="true"></i><span>Konfiguration herunterladen</span>
           </button>
           <button class="button" onclick="app.downloadPDF()">
-            <i class="fas fa-file-pdf" aria-hidden="true"></i> PDF speichern
+            <i class="fas fa-file-pdf" aria-hidden="true"></i><span>PDF speichern</span>
           </button>
         </div>
       </div>
