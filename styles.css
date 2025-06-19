@@ -253,7 +253,7 @@ body {
 
 .suggestion h3 i { color: var(--accent); }
 .suggestion a { color: var(--accent); text-decoration: none; font-weight: 500; transition: var(--transition); }
-.suggestion a:hover { text-decoration: underline; color: var(--accent-hover); }
+.suggestion a:hover { text-decoration: underline; color: #FFCC00; }
 
 .suggestion p,
 .hardware-recommendation p,
@@ -421,7 +421,7 @@ body {
 }
 
 .footer-nav a:hover {
-  color: var(--accent);
+  color: #FFCC00;
   text-decoration: underline;
 }
 
