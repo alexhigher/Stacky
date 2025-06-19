@@ -1,4 +1,8 @@
-// Configuration data
+/**
+ * Configuration data for Stacky application.
+ * Contains definitions for available services, hardware options, and add-ons.
+ * This object serves as the primary data source for generating recommendations.
+ */
 const CONFIG = {
   services: {
     'cloud-storage': {
@@ -102,7 +106,11 @@ const CONFIG = {
   }
 };
 
-// Main Application Class
+/**
+ * Main application class for Stacky.
+ * Manages the user interface, handles screen transitions, service selections,
+ * configuration data, and generates hardware/software recommendations.
+ */
 class StackyApp {
   constructor() {
     this.selectedServices = new Set();
@@ -112,6 +120,11 @@ class StackyApp {
     this.init();
   }
 
+  /**
+   * Initializes the application.
+   * Sets up theme preferences, event listeners for navigation,
+   * and prepares the UI for user interaction.
+   */
   init() {
     this.updateProgress();
     const savedTheme = localStorage.getItem('theme') || 'light';
@@ -138,6 +151,11 @@ class StackyApp {
     });
   }
 
+  /**
+   * Transitions between different screens in the application.
+   * Handles animations, validation before transitions, and screen-specific actions.
+   * @param {string} screenName - The ID of the screen to display.
+   */
   showScreen(screenName) {
     const currentScreenEl = document.getElementById(`${this.currentScreen}-screen`);
     const newScreenEl = document.getElementById(`${screenName}-screen`);
@@ -198,6 +216,11 @@ class StackyApp {
     }, 100);
   }
 
+  /**
+   * Toggles the selection state of a service option.
+   * Updates the UI and internal state to reflect user choices.
+   * @param {HTMLElement} element - The DOM element representing the service option.
+   */
   toggleService(element) {
     const service = element.dataset.service;
     const isSelected = element.classList.contains('selected');
@@ -247,6 +270,12 @@ class StackyApp {
     }
   }
 
+  /**
+   * Handles submission of the configuration form.
+   * Collects user input for user count, access type, security level, and data type.
+   * Validates input before proceeding to the suggestions screen.
+   * @param {Event} event - The form submission event.
+   */
   handleConfigSubmit(event) {
     event.preventDefault();
     
@@ -303,6 +332,11 @@ class StackyApp {
     return true;
   }
 
+  /**
+   * Generates personalized suggestions based on user selections and configuration.
+   * Creates UI elements for software recommendations, hardware suggestions,
+   * cost calculations, and action buttons.
+   */
   generateSuggestions() {
     const container = document.getElementById('suggestions-container');
     container.innerHTML = '';
@@ -520,6 +554,11 @@ class StackyApp {
     this.calculateAmortization();
   }
 
+  /**
+   * Calculates the amortization of self-hosting costs compared to cloud costs.
+   * Updates the UI with cost comparisons, savings, and break-even points.
+   * Also generates a line chart to visualize cost trends over time.
+   */
   calculateAmortization() {
     const cloudCost = parseFloat(document.getElementById('current-cloud-cost').value) || 0;
     const periodYears = parseInt(document.getElementById('calculation-period').value);
